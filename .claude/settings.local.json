@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find c:/3DInteractive/unitywebgl/public -type f -name *.wasm -o -name *.json -o -name index.html)"
+    ]
+  }
+}
