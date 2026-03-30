@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite'
+import { defineConfig, type Plugin } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import fs from 'fs'
@@ -7,7 +7,7 @@ import path from 'path'
 
 // Pre-decompress .br files on startup
 function decompressBrFiles() {
-  const buildDir = path.join(process.cwd(), 'src/assets/Web/Build');
+  const buildDir = path.join(process.cwd(), 'src/assets/Addressables_web/Build');
   if (fs.existsSync(buildDir)) {
     const files = fs.readdirSync(buildDir);
     files.forEach(file => {
@@ -36,11 +36,44 @@ function decompressBrFiles() {
 // Run decompression on startup
 decompressBrFiles();
 
+function brotliServePlugin(): Plugin {
+  return {
+    name: 'brotli-serve',
+    configureServer(server) {
+      server.middlewares.use((req, res, next) => {
+        const urlPath = req.url?.split('?')[0] ?? '';
+        if (!urlPath.endsWith('.br')) {
+          return next();
+        }
+
+        const filePath = path.join(process.cwd(), urlPath);
+        if (!fs.existsSync(filePath)) {
+          return next();
+        }
+
+        const lower = urlPath.toLowerCase();
+        if (lower.endsWith('.js.br')) {
+          res.setHeader('Content-Type', 'application/javascript');
+        } else if (lower.endsWith('.wasm.br')) {
+          res.setHeader('Content-Type', 'application/wasm');
+        } else {
+          res.setHeader('Content-Type', 'application/octet-stream');
+        }
+        res.setHeader('Content-Encoding', 'br');
+        res.setHeader('Cache-Control', 'no-cache');
+
+        fs.createReadStream(filePath).pipe(res);
+      });
+    },
+  };
+}
+
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
     react(),
     tailwindcss(),
+    brotliServePlugin(),
   ],
   assetsInclude: ['**/*.br', '**/*.data', '**/*.wasm'],
   server: {

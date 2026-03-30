@@ -11,10 +11,10 @@ const UnityWindow = () => {
         // Fetch file sizes of Unity build files
         const fetchFileSizes = async () => {
             const buildFiles = [
-                '/src/assets/Web/Build/Web.data',
-                '/src/assets/Web/Build/Web.framework.js',
-                '/src/assets/Web/Build/Web.loader.js',
-                '/src/assets/Web/Build/Web.wasm',
+                '/src/assets/Addressables_web/Build/Addressables_web.data',
+                '/src/assets/Addressables_web/Build/Addressables_web.framework.js',
+                '/src/assets/Addressables_web/Build/Addressables_web.loader.js',
+                '/src/assets/Addressables_web/Build/Addressables_web.wasm',
             ];
 
             try {
@@ -51,7 +51,7 @@ const UnityWindow = () => {
 
     const handleFullscreen = () => {
         if (iframeRef.current) {
-            iframeRef.current.contentWindow?.postMessage({ type: 'unity-fullscreen' }, '*');
+            iframeRef.current.requestFullscreen();
         }
     };
 
@@ -62,9 +62,10 @@ const UnityWindow = () => {
                 <iframe
                     ref={iframeRef}
                     className="w-full h-full rounded-2xl shadow-2xl shadow-black"
-                    src="/src/assets/Web/index.html"
+                    src="/src/assets/Addressables_web/index.html"
                     title="Unity WebGL Build"
                     allow="autoplay; camera; microphone; clipboard-read; clipboard-write"
+                    allowFullScreen
                 />
             </div>
             <button
