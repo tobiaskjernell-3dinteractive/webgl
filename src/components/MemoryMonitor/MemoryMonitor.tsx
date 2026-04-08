@@ -33,6 +33,7 @@ const formatBytes = (bytes: number): string => {
 
 const MemoryMonitor = () => {
   const [memory, setMemory] = useState<MemoryInfo | null>(null);
+  const [isVisible, setIsVisible] = useState(true);
 
   // Check if performance.memory is available at component level
   const isSupported = typeof performance !== 'undefined' && 'memory' in performance;
@@ -94,70 +95,81 @@ const MemoryMonitor = () => {
   };
 
   return (
-    <div className="fixed bottom-4 right-4 p-4 bg-gray-900 text-white rounded-lg shadow-2xl border border-gray-700 w-72">
-      <div className={`text-lg font-bold mb-3 bg-linear-to-r ${getColorClass(memory.usagePercent)} bg-clip-text text-transparent`}>
-        Memory Monitor
-      </div>
+    <div className="fixed top-4 right-4 z-50">
+      <button
+        onClick={() => setIsVisible(!isVisible)}
+        className="ml-auto block px-3 py-1.5 bg-gray-800 text-gray-300 text-xs font-semibold rounded-lg border border-gray-700 hover:bg-gray-700 transition-colors"
+      >
+        {isVisible ? 'Hide' : 'Memory'}
+      </button>
 
-      {/* Memory Usage Bar */}
-      <div className="mb-4">
-        <div className="flex justify-between items-center mb-2">
-          <span className="text-sm text-gray-300">Heap Memory</span>
-          <span className="text-sm font-semibold text-gray-200">{memory.usagePercent.toFixed(1)}%</span>
-        </div>
-        <div className="w-full h-3 bg-gray-700 rounded-full overflow-hidden">
-          <div
-            className={`h-full ${getBarColor(memory.usagePercent)} transition-all duration-300`}
-            style={{ width: `${memory.usagePercent}%` }}
-          ></div>
-        </div>
-      </div>
+      {isVisible && (
+        <div className="mt-2 p-4 bg-gray-900 text-white rounded-lg shadow-2xl border border-gray-700 w-72">
+          <div className={`text-lg font-bold mb-3 bg-linear-to-r ${getColorClass(memory.usagePercent)} bg-clip-text text-transparent`}>
+            Memory Monitor
+          </div>
 
-      {/* Memory Stats */}
-      <div className="space-y-2 text-sm">
-        <div className="flex justify-between text-gray-300">
-          <span>Used:</span>
-          <span className="font-mono font-semibold">{formatBytes(memory.usedJSHeapSize)}</span>
-        </div>
-        <div className="flex justify-between text-gray-300">
-          <span>Total:</span>
-          <span className="font-mono font-semibold">{formatBytes(memory.totalJSHeapSize)}</span>
-        </div>
-        <div className="flex justify-between text-gray-300">
-          <span>Limit:</span>
-          <span className="font-mono font-semibold">{formatBytes(memory.jsHeapSizeLimit)}</span>
-        </div>
-        <div className="border-t border-gray-700 pt-2 mt-2">
-          <div className="flex justify-between text-gray-300">
-            <span>WebGL Cache:</span>
-            <span className="font-mono font-semibold text-blue-400">{formatBytes(memory.webglCacheSize)}</span>
-          </div>
-          <div className="flex justify-between text-gray-300 mt-2">
-            <span>IndexedDB:</span>
-            <span className="font-mono font-semibold text-purple-400">{formatBytes(memory.indexedDBSize)}</span>
-          </div>
-          {memory.indexedDBPercent > 0 && (
-            <div className="text-xs text-gray-400 mt-1">
-              ({memory.indexedDBPercent.toFixed(1)}% of quota)
+          {/* Memory Usage Bar */}
+          <div className="mb-4">
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-sm text-gray-300">Heap Memory</span>
+              <span className="text-sm font-semibold text-gray-200">{memory.usagePercent.toFixed(1)}%</span>
             </div>
-          )}
-        </div>
-      </div>
+            <div className="w-full h-3 bg-gray-700 rounded-full overflow-hidden">
+              <div
+                className={`h-full ${getBarColor(memory.usagePercent)} transition-all duration-300`}
+                style={{ width: `${memory.usagePercent}%` }}
+              ></div>
+            </div>
+          </div>
 
-      {/* Memory Status Indicator */}
-      <div className="mt-3 pt-3 border-t border-gray-700">
-        <span className={`text-xs font-semibold ${
-          memory.usagePercent < 50 ? 'text-green-400' :
-          memory.usagePercent < 75 ? 'text-yellow-400' :
-          memory.usagePercent < 90 ? 'text-orange-400' :
-          'text-red-400'
-        }`}>
-          {memory.usagePercent < 50 ? '✓ Healthy' :
-           memory.usagePercent < 75 ? '⚠ Moderate' :
-           memory.usagePercent < 90 ? '⚠ High' :
-           '✗ Critical'}
-        </span>
-      </div>
+          {/* Memory Stats */}
+          <div className="space-y-2 text-sm">
+            <div className="flex justify-between text-gray-300">
+              <span>Used:</span>
+              <span className="font-mono font-semibold">{formatBytes(memory.usedJSHeapSize)}</span>
+            </div>
+            <div className="flex justify-between text-gray-300">
+              <span>Total:</span>
+              <span className="font-mono font-semibold">{formatBytes(memory.totalJSHeapSize)}</span>
+            </div>
+            <div className="flex justify-between text-gray-300">
+              <span>Limit:</span>
+              <span className="font-mono font-semibold">{formatBytes(memory.jsHeapSizeLimit)}</span>
+            </div>
+            <div className="border-t border-gray-700 pt-2 mt-2">
+              <div className="flex justify-between text-gray-300">
+                <span>WebGL Cache:</span>
+                <span className="font-mono font-semibold text-blue-400">{formatBytes(memory.webglCacheSize)}</span>
+              </div>
+              <div className="flex justify-between text-gray-300 mt-2">
+                <span>IndexedDB:</span>
+                <span className="font-mono font-semibold text-purple-400">{formatBytes(memory.indexedDBSize)}</span>
+              </div>
+              {memory.indexedDBPercent > 0 && (
+                <div className="text-xs text-gray-400 mt-1">
+                  ({memory.indexedDBPercent.toFixed(1)}% of quota)
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Memory Status Indicator */}
+          <div className="mt-3 pt-3 border-t border-gray-700">
+            <span className={`text-xs font-semibold ${
+              memory.usagePercent < 50 ? 'text-green-400' :
+              memory.usagePercent < 75 ? 'text-yellow-400' :
+              memory.usagePercent < 90 ? 'text-orange-400' :
+              'text-red-400'
+            }`}>
+              {memory.usagePercent < 50 ? '✓ Healthy' :
+               memory.usagePercent < 75 ? '⚠ Moderate' :
+               memory.usagePercent < 90 ? '⚠ High' :
+               '✗ Critical'}
+            </span>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

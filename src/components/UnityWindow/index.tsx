@@ -57,7 +57,7 @@ const UnityWindow = () => {
 
     return (
         <>
-            <div className="relative w-240 h-150">
+            <div className="relative w-full max-w-240 aspect-video">
                 <LoadingBar isVisible={isLoading} progress={progress} totalSize={totalSize} />
                 <iframe
                     ref={iframeRef}

@@ -1,0 +1,21 @@
+Use VSCode for easier setup.
+
+First install: 
+  1.Open terminal: write 'node -v'  (If vsCode: ctrl+j)
+    If you don't get any version or only getting error. You have to download nodejs.
+    https://nodejs.org/en/download
+    Download and install for you computer. Restart your code editor.
+
+    1.1. Open again and verify your version/nodejs install.
+
+  2.write 'npm install' to install dependencies from package.json (it automatic installs our dependencies)
+
+
+1. Drag your Unity-build to 'src/assets/'
+2. Copy index.html in '_HOW_TO_USE_' and replace it in your build folder (delete your index.html in build folder before).
+3. In your build folder, go to TemplateData folder and copy the 'style.css' from _HOW_TO_USE_ into this folder.
+4. Open a 'Bash terminal' (ctrl+j to open a terminal and then press the dropdown arrow right side of the + button. You can find
+it all the way to the right of the terminal. Pick 'Git Bash').
+5. Write: './rename-build.sh <old_name> <new_name>' to let the script change all the references in important files.
+    Example 1: I have a new build: ./rename-build.sh ScaniaVersion_1 ScaniaVersion_2
+    Example 2: First time with no previous build: ./rename-build.sh ScaniaVersion_1 ScaniaVersion_1
