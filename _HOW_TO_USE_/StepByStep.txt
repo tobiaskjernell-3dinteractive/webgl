@@ -19,3 +19,5 @@ it all the way to the right of the terminal. Pick 'Git Bash').
 5. Write: './rename-build.sh <old_name> <new_name>' to let the script change all the references in important files.
     Example 1: I have a new build: ./rename-build.sh ScaniaVersion_1 ScaniaVersion_2
     Example 2: First time with no previous build: ./rename-build.sh ScaniaVersion_1 ScaniaVersion_1
+6. Start nodjs server: npm run dev
+7. ctrl+left click on the blue URL in terminal or visit localhost:5173 in a new website tab.
